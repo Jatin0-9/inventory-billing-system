@@ -6,8 +6,8 @@ A console-based shop application to manage products and generate customer bills.
 
 ## Team
 
-- Jatin Anand, Enrollment No: ________
-- ________ (partner name), Enrollment No: ________
+- Jatin Anand, Enrollment No: 19814803125
+- Arjun Singh, Enrollment No: 19914803125
 - Maharaja Agrasen Institute of Technology, Delhi
 
 ## Features
