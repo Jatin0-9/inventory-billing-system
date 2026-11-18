@@ -1,7 +1,3 @@
-// Inventory and Billing System - CIC-211 OOP using C++ Mini Project 7
-// Concepts: classes/objects, constructors, encapsulation, operator overloading,
-//           vectors, iterators, file handling, exception handling.
-
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -13,11 +9,11 @@
 using namespace std;
 
 const string DATA_FILE = "products.txt";
-const double GST_RATE = 0.05;           // 5% tax
-const long long DISCOUNT_LIMIT = 200000; // Rs 2000 (stored in paise)
-const double DISCOUNT_RATE = 0.10;      // 10% discount if subtotal >= Rs 2000
+const double GST_RATE = 0.05;          
+const long long DISCOUNT_LIMIT = 200000; 
+const double DISCOUNT_RATE = 0.10;      
 
-// ---------- Money: stores amount in paise to avoid floating point errors ----------
+
 class Money {
     long long paise;
 public:
@@ -26,7 +22,7 @@ public:
     long long raw() const { return paise; }
     double rupees() const { return paise / 100.0; }
 
-    Money operator+(const Money& o) const { return Money(paise + o.paise); }   // operator overloading
+    Money operator+(const Money& o) const { return Money(paise + o.paise); }   
     Money operator-(const Money& o) const { return Money(paise - o.paise); }
     Money operator*(int q) const { return Money(paise * q); }
     Money operator*(double f) const { return Money((long long)(paise * f + 0.5)); }
@@ -40,7 +36,6 @@ public:
     friend ostream& operator<<(ostream& os, const Money& m) { return os << m.str(); }
 };
 
-// ---------- Product ----------
 class Product {
     int id;
     string name;
@@ -65,13 +60,13 @@ public:
         cout << left << setw(6) << id << setw(20) << name
              << setw(12) << price.str() << setw(8) << quantity << '\n';
     }
-    // File format: id|name|paise|quantity
+   
     void save(ostream& out) const {
         out << id << '|' << name << '|' << price.raw() << '|' << quantity << '\n';
     }
 };
 
-// ---------- Inventory: manages all products and the data file ----------
+
 class Inventory {
     vector<Product> products;
 
@@ -81,7 +76,7 @@ public:
 
     void load() {
         ifstream in(DATA_FILE);
-        if (!in) return; // file missing on first run is fine
+        if (!in) return; 
         string line;
         while (getline(in, line)) {
             if (line.empty()) continue;
@@ -92,7 +87,7 @@ public:
                                            line.substr(a + 1, b - a - 1),
                                            Money(stoll(line.substr(b + 1, c - b - 1))),
                                            stoi(line.substr(c + 1))));
-            } catch (...) { /* skip corrupt line */ }
+            } catch (...) {  }
         }
     }
 
@@ -110,7 +105,7 @@ public:
     }
 
     bool add(const Product& p) {
-        if (find(p.getId())) return false; // duplicate ID
+        if (find(p.getId())) return false;
         products.push_back(p);
         return true;
     }
@@ -125,7 +120,7 @@ public:
     }
 };
 
-// ---------- Bill ----------
+
 struct BillItem {
     int id;
     string name;
@@ -140,7 +135,7 @@ public:
         Product* p = inv.find(id);
         if (!p) throw invalid_argument("Product ID not found");
         if (qty <= 0) throw invalid_argument("Quantity must be positive");
-        // include quantity already placed in this bill
+       
         int already = 0;
         for (size_t i = 0; i < items.size(); i++)
             if (items[i].id == id) already += items[i].qty;
@@ -152,7 +147,7 @@ public:
 
     bool empty() const { return items.empty(); }
 
-    // Prints the bill and reduces stock after successful generation
+   
     void generate(Inventory& inv) {
         Money subtotal;
         cout << "\n=========== BILL ===========\n";
@@ -182,7 +177,7 @@ public:
     }
 };
 
-// ---------- Input helpers ----------
+
 int readInt(const string& prompt) {
     int x;
     while (true) {
@@ -205,7 +200,7 @@ double readDouble(const string& prompt) {
     }
 }
 
-// ---------- Menu actions ----------
+
 void addProduct(Inventory& inv) {
     int id = readInt("Product ID: ");
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
